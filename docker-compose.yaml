@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  nginx:
+    image: "nginx:1.27.0"
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker-config/nginx/:/etc/nginx/conf.d/
+      - ./:/var/www/laravel/
+    container_name: filter-cars-nginx
+  php:
+    build:
+      context: docker-config/php
+      dockerfile: php.dockerfile
+    volumes:
+      - ./:/var/www/laravel/
+    container_name: filter-cars-php
+
+  mysql-master:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_db
+    volumes:
+      - ./docker-config/mysql/data/:/docker-entrypoint-initdb.d
+    container_name: filter-cars-mysql-master
+
+  mysql-slave:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel_db
+    volumes:
+      - ./docker-config/mysql/data/:/docker-entrypoint-initdb.d
+    container_name: filter-cars-mysql-slave
