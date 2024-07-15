@@ -39,7 +39,6 @@ trait DatabaseChecker
                 $connectionName = current($this->connections);
                 Config::set('database.default', $connectionName);
                 DB::reconnect($connectionName);
-                //dd($this->connections);
             }
         }
 
